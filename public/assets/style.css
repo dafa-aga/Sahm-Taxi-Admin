@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    scroll-behavior: smooth;
+    direction: rtl;
+}
+
+.navbar {
+    background: rgba(0,0,0,0.6) !important;
+}
+
+.navbar .nav-link {
+    color: white !important;
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: #ffcc00 !important;
+}
+
+header {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('taxi-header.jpg') center/cover no-repeat;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 20px; }
+header p { font-size: 1.5rem; margin-bottom: 30px; }
+
+.btn-custom {
+    padding: 15px 40px;
+    font-weight: bold;
+    border-radius: 50px;
+    background: #ffcc00;
+    color: #000;
+    transition: 0.3s;
+}
+
+.btn-custom:hover { background: #e6b800; color: #fff; }
+
+
+.about-section img {
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card { border: none; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+.card img { height: 200px; object-fit: cover; }
+
+form input, form select, form textarea {
+    border-radius: 50px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+.w-h-100{
+    width: 100px !important;
+    height: 100px !important;
+}
+    .card-clean { border: 1px solid #eef0f2; border-radius:12px; }
+    .status-pending { background:#fff3cd; color:#856404; border-radius:8px; padding:4px 8px; }
+    .status-completed { background:#d4edda; color:#155724; border-radius:8px; padding:4px 8px; }
+    .actions a { text-decoration:none; }
+
+form input:focus, form select:focus, form textarea:focus { border-color: #ffcc00; box-shadow: 0 0 10px rgba(255,204,0,0.4); outline: none; }
+
+.testimonial { background: #fff3cd; border-radius: 20px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; }
+
+footer { text-align: center; }
+ @media (max-width: 576px) {
+      .header-row { flex-direction: column; align-items:flex-start; gap:.75rem; }
+    }
