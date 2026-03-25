@@ -28,6 +28,8 @@ public function store(Request $request)
     $request->validate([
         'name'  => 'required',
         'phone' => 'required',
+        'price' => 'nullable|numeric|min:0',
+        'payment_method' => 'nullable|in:cash',
     ]);
 
     try {
@@ -41,6 +43,8 @@ public function store(Request $request)
             'name'           => $request->name,
             'phone'          => $request->phone,
             'service_id'     => $serviceId, 
+            'price'          => $request->filled('price') ? (float) $request->price : null,
+            'payment_method' => $request->input('payment_method') ?: 'cash',
             'start_location' => $request->input('start_location', 'تواصل مباشر'),
             'end_location'   => $request->input('end_location', 'تواصل مباشر'),
             'description'    => $request->description,

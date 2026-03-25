@@ -23,6 +23,17 @@ use App\Models\Complaint;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/contact-us', [HomeController::class, 'storeComplaint'])->name('complaints.submit'); 
 
+// جلب سعر الخدمة الافتراضي (لاستخدامه في تعبئة السعر تلقائياً في نموذج الحجز)
+Route::get('/services/{service}/default-price', function (\App\Models\Service $service) {
+    $amount = $service->prices()->orderBy('id')->value('amount');
+
+    return response()->json([
+        'service_id' => $service->id,
+        'amount' => $amount !== null ? (float) $amount : null,
+        'currency' => '₪',
+    ]);
+})->name('services.default-price');
+
 Route::get('/contact', function () {
     return view('frontend.contect'); 
 })->name('contact.index'); 

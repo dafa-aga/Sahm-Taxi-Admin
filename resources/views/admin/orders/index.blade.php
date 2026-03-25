@@ -49,6 +49,7 @@
                             <th>الهاتف (Phone)</th>
                             <th>المسار (Route)</th>
                             <th>الخدمة (Service)</th>
+                            <th>السعر/الدفع</th>
                             <th>الحالة (Status)</th>
                             <th>العمليات (Actions)</th>
                         </tr>
@@ -101,6 +102,20 @@
                                 </span>
                             </td>
                             <td>
+                                <div class="small">
+                                    <div class="fw-bold">
+                                        {{ $order->price !== null ? number_format((float) $order->price, 2) . ' ₪' : '—' }}
+                                    </div>
+                                    <div class="text-muted">
+                                        @php
+                                            $pm = $order->payment_method;
+                                            $pmLabel = $pm === 'cash' ? 'كاش' : ($pm === 'card' ? 'بطاقة' : ($pm === 'wallet' ? 'محفظة' : '—'));
+                                        @endphp
+                                        {{ $pmLabel }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
                                 @if($order->status == 'pending')
                                     <span class="badge bg-warning text-dark">قيد الانتظار</span>
                                 @elseif($order->status == 'accepted' || $order->status == 'completed' || $order->status == 'active')
@@ -144,7 +159,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">لا توجد طلبات أو رسائل حالياً</td>
+                            <td colspan="8" class="text-center py-5 text-muted">لا توجد طلبات أو رسائل حالياً</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -191,6 +206,19 @@
                                 <option value="{{ $service->id }}">{{ $service->title }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">سعر التوصيل</label>
+                            <input type="number" step="0.01" min="0" name="price" class="form-control" placeholder="مثلاً 50">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">طريقة الدفع</label>
+                            <select name="payment_method" class="form-select">
+                                <option value="cash">كاش</option>
+                            </select>
+                            <div class="form-text">حالياً الدفع متاح كاش فقط.</div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">ملاحظات العميل</label>

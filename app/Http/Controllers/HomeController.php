@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
   public function index()
 {
-    $services = \App\Models\Service::all();
+    $services = \App\Models\Service::with('prices')->get();
     $sliders = \App\Models\Slider::all();
     $prices = \App\Models\Price::with('service')->get(); 
     

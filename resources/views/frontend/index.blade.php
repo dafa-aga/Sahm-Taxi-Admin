@@ -242,6 +242,8 @@
                     <form action="{{ route('admin.orders.store') }}" method="POST" id="orderForm">
                         @csrf
                         <input type="hidden" name="service_id" id="selected_service_id">
+                        <input type="hidden" name="price" id="selected_price">
+                        <input type="hidden" name="payment_method" value="cash">
 
                         <div class="row g-3">
                             <div class="col-md-6"><input type="text" name="name" class="form-control"
@@ -268,6 +270,19 @@
                                     value="{{ date('Y-m-d') }}" required></div>
                             <div class="col-md-3"><input type="time" name="time" class="form-control"
                                     value="{{ date('H:i') }}" required></div>
+                        </div>
+
+                        <div class="row g-3 mt-3 align-items-end">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">طريقة الدفع</label>
+                                <input type="text" class="form-control" value="كاش" readonly>
+                                <div class="form-text">حالياً الدفع متاح كاش فقط.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">سعر التوصيل (تلقائي)</label>
+                                <input type="text" class="form-control" id="price_preview" value="—" readonly>
+                                <div class="form-text" id="price_hint">اختر الخدمة ليظهر السعر.</div>
+                            </div>
                         </div>
 
                         <div class="mt-3">
@@ -298,11 +313,51 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        async function applyServicePrice(serviceId) {
+            const hidden = document.getElementById('selected_price');
+            const preview = document.getElementById('price_preview');
+            const hint = document.getElementById('price_hint');
+
+            if (!hidden || !preview) return;
+
+            hidden.value = '';
+            preview.value = '...';
+            if (hint) hint.textContent = 'جاري جلب السعر...';
+
+            try {
+                const res = await fetch(`/services/${serviceId}/default-price`, {
+                    headers: { 'Accept': 'application/json' },
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                const amount = data?.amount ?? null;
+                const currency = data?.currency ?? '₪';
+
+                if (amount === null || Number.isNaN(Number(amount))) {
+                    hidden.value = '';
+                    preview.value = '—';
+                    if (hint) hint.textContent = 'لا يوجد سعر محدد لهذه الخدمة بعد.';
+                    return;
+                }
+
+                hidden.value = amount;
+                preview.value = amount + ' ' + currency;
+                if (hint) hint.textContent = 'تم تعبئة السعر تلقائياً حسب الخدمة المختارة.';
+            } catch (e) {
+                hidden.value = '';
+                preview.value = '—';
+                if (hint) hint.textContent = 'تعذر جلب السعر تلقائياً، جرّب مرة أخرى.';
+            }
+        }
+
         function setOfficialBooking(serviceId, serviceTitle) {
             // 1. ربط الـ ID في الحقل المخفي والمنسدل
             document.getElementById('selected_service_id').value = serviceId;
             const dropdown = document.getElementById('service_select_dropdown');
             if (dropdown) dropdown.value = serviceId;
+            applyServicePrice(serviceId);
 
             // 2. تغيير نص الزر ليكون تأكيد حجز رسمي
             document.getElementById('submit_btn').innerText = "تأكيد طلب حجز: " + serviceTitle;
@@ -319,6 +374,16 @@
                 document.getElementById('input_start').focus();
             }, 800);
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdown = document.getElementById('service_select_dropdown');
+            if (dropdown) {
+                dropdown.addEventListener('change', (e) => {
+                    const value = e.target.value ? Number(e.target.value) : null;
+                    if (value) applyServicePrice(value);
+                });
+            }
+        });
     </script>
 
 </body>

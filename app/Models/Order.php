@@ -9,7 +9,7 @@ class Order extends Model
     // 
   protected $fillable = [
     'service_id', 'driver_id', 'name', 'phone', 'date', 'time', 
-    'start_location', 'end_location', 'service_type', 'price', 'description', 'status'
+    'start_location', 'end_location', 'service_type', 'price', 'payment_method', 'description', 'status'
 ];
 
 // علاقة الطلب بالخدمة
